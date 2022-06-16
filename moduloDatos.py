@@ -16,6 +16,11 @@ def cambiaColumnas(datos, columnas):
     return datos
 
 
+def renombrarColumna(datos, cambio):
+    datos.rename(columns=cambio, inplace=True)
+    return datos
+
+
 def guardarDatos(datos, ruta, fichero):
     datos.to_csv(ruta+fichero)
     return True
@@ -35,6 +40,16 @@ def reemplazarNulos(datos, columna):
     return datos
 
 
+def cambiaTipo(columna, tipo='float64'):
+    columna = columna.astype(tipo)
+    return columna
+
+
+def normalizaColumna(datos, columna):
+    datos[columna] = datos[columna]/datos[columna].max()
+    return datos
+
+
 if __name__ == '__main__':
     ruta = 'D:\\workspace\\WorkspaceTutorialCienciaDatos\\datos\\'
     fichero = 'precios_coches.csv'
@@ -48,3 +63,11 @@ if __name__ == '__main__':
     print(datos.columns)
     print(dameEstadisticos(datos))
     print(dameEstadisticos(datos, 'todos'))
+    columna = datos['kilometros recorridos']
+    columna = cambiaTipo(columna, 'int64')
+    print(columna.dtype)
+    print(columna)
+    datos = renombrarColumna(datos, {'kilometros recorridos': 'kilometros'})
+    print(datos.columns)
+    datos = normalizaColumna(datos, 'kilometros')
+    print(datos['kilometros'])
