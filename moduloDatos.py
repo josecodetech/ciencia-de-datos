@@ -2,8 +2,8 @@ import pandas as pd
 import numpy as np
 
 
-def cargaDatos(ruta, fichero):
-    datos = pd.read_csv(ruta+fichero)
+def cargaDatos(ruta, fichero, separador=','):
+    datos = pd.read_csv(ruta+fichero,sep=separador)
     return datos
 
 
@@ -16,8 +16,8 @@ def cambiaColumnas(datos, columnas):
     return datos
 
 
-def renombrarColumna(datos, cambio):
-    datos.rename(columns=cambio, inplace=True)
+def renombrarColumna(datos, columna, cambio):
+    datos.rename(columns={columna: cambio}, inplace=True)
     return datos
 
 
@@ -34,6 +34,11 @@ def dameEstadisticos(datos, tipo='numerico'):
         return datos.describe(include='all')
 
 
+def cambiaNombreIndice(datos, nombre='indice'):
+    datos.index.name = nombre
+    return datos
+
+
 def reemplazarNulos(datos, columna):
     media = datos[columna].mean()
     datos[columna].replace(np.nan, media, inplace=True)
@@ -41,12 +46,19 @@ def reemplazarNulos(datos, columna):
 
 
 def cambiaTipo(columna, tipo='float64'):
-    columna = columna.astype(tipo)
+    #columna = columna.astype(tipo)
+    #datos['potencia'] = pd.to_numeric(datos['potencia'],errors = 'coerce')
+    columna = pd.to_numeric(columna,errors = 'coerce')
     return columna
 
 
 def normalizaColumna(datos, columna):
     datos[columna] = datos[columna]/datos[columna].max()
+    return datos
+
+
+def obtenerDummies(datos, columna):
+    datos = pd.get_dummies(datos[columna])
     return datos
 
 

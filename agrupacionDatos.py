@@ -34,3 +34,6 @@ plt.title('Histograma kilometros recorridos')
 plt.xlabel('Kilometros')
 plt.ylabel('Frecuencia')
 plt.show()
+
+
+     
