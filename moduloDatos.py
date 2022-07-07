@@ -37,23 +37,15 @@ def guardarDatos(datos, ruta, fichero):
     return True
 
 
-def dameEstadisticos(datos, tipo='numerico'):
-    """tipo numerio o todos"""
-    if tipo == 'numerico':
-        return datos.describe()
-    else:
-        return datos.describe(include='all')
-
-
 def cambiaNombreIndice(datos, nombre='indice'):
     datos.index.name = nombre
     return datos
 
 
-def reemplazarNulos(datos, columna):
-    media = datos[columna].mean()
-    datos[columna].replace(np.nan, media, inplace=True)
-    return datos
+def reemplazarNulos(columna):
+    media = columna.mean()
+    columna.replace(np.nan, media, inplace=True)
+    return columna
 
 
 def cambiaTipo(columna, tipo='float64'):
@@ -63,14 +55,20 @@ def cambiaTipo(columna, tipo='float64'):
     return columna
 
 
-def normalizaColumna(datos, columna):
-    datos[columna] = datos[columna]/datos[columna].max()
-    return datos
+def normalizaColumna(columna):
+    columna = columna/columna.max()
+    return columna
 
 
-def obtenerDummies(datos, columna):
-    datos = pd.get_dummies(datos[columna])
-    return datos
+def obtenerDummies(columna):
+    columnas = pd.get_dummies(columna)
+    return columnas
+
+
+def agruparDatos(datos, columna):
+    datos_agrupados = datos.groupby(columna, as_index=False)
+    return datos_agrupados
+
 # visualizacion de datos
 
 
@@ -88,16 +86,7 @@ def graficaScatter(x, y, titulo='', etiquetaX='X', etiquetaY='Y'):
     plt.show()
 
 
-def coeficientePearson(columna1, columna2):
-    pearson_coef, p_valor = stats.pearsonr(columna1, columna2)
-    return pearson_coef, p_valor
-
-
-def agruparDatos(datos, columna):
-    datos_agrupados = datos.groupby(columna, as_index=False)
-    return datos_agrupados
-
-
+# Regresiones
 def regresionLineal(X, y):
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=0)
@@ -105,9 +94,35 @@ def regresionLineal(X, y):
     lm = LinearRegression()
 
     lm.fit(X_train, y_train)
-    prediccion = lm.predict(X_test)
-    print(lm.score(X, y))
+    return lm
+
+
+def damePrediccionRL(lm, X):
+    prediccion = lm.predict(X)
+    #print(lm.score(X, y))
     return prediccion
+
+# Estadisticos
+def dameEstadisticos(datos, tipo='numerico'):
+    """tipo numerio o todos"""
+    if tipo == 'numerico':
+        return datos.describe()
+    else:
+        return datos.describe(include='all')
+
+
+def coeficientePearson(columna1, columna2):
+    pearson_coef, p_valor = stats.pearsonr(columna1, columna2)
+    return pearson_coef, p_valor
+def errorCuadratico(y_real, prediccion):
+    ECM = metrics.mean_squared_error(y_real, prediccion)
+    #print(ECM)
+    return ECM
+def rCuadrado(y_real, prediccion):
+    r_cuadrado = metrics.r2_score(y_real, prediccion)
+    #print(r_cuadrado)
+    return r_cuadrado
+
 
 
 if __name__ == '__main__':
@@ -127,5 +142,7 @@ if __name__ == '__main__':
     X = np.array(X).reshape(1, -1).T
     print(X.shape)
     print(y.shape)
-    prediccion = regresionLineal(X, y)
+    lm = regresionLineal(X, y)
+    prediccion = damePrediccionRL(lm, X)
     print(y, prediccion)
+    print(rCuadrado(y,prediccion))
