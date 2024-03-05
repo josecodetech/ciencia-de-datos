@@ -8,4 +8,6 @@ clave.txt
 /videos
 /imagenes
 /cheet_python
-__pycache__
+/__pycache__
+/env
+/venv
