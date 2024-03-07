@@ -1,3 +1,3 @@
 # ciencia-de-datos
-Ciencia de datos con Python
+Ciencia de datos y machine learning con Python
 Mas en https://www.youtube.com/@josecodetech/
