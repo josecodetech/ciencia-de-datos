@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediccion propinas</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='estilos.css')}}">
+</head>
+<body>
+    <h1>Prediccion propinas</h1>
+    <form action="{{url_for('prediccion')}}" method="POST">
+        <label for="importe_total">Importe total:</label>
+        <input type="number" id="importe_total" name="importe_total" step="0.01" required>
+        <label for="numero_personas">Numero personas: </label>
+        <input type="number" id="numero_personas" name="numero_personas" required>
+        <button type="submit">Predecir</button>
+    </form>
+    {% if prediccion %}
+        <div class="prediccion">
+            <h2>Prediccion: </h2>
+            <p>{{prediccion}}</p>
+        </div>
+    {% endif %}
+</body>
+</html>
